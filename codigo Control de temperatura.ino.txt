@@ -1,0 +1,56 @@
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+float vOut;
+float vOut2;
+float vRead=A0;
+float vRead2=A1;
+int dt = 250;
+float analogVal;
+float analogVal2;
+
+void setup() {
+  // put your setup code here, to run once:
+    lcd.init();
+    lcd.backlight();
+    lcd.clear();
+  pinMode(vRead, INPUT);
+  pinMode(vRead2, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  analogVal = analogRead(vRead);
+  analogVal2 = analogRead(vRead2);
+  vOut=(5.*analogVal)/1023.;
+  vOut2=(5.*analogVal2)/1023.;
+  //vOut = vOut+0.07; //error detectado que se compensa
+  Serial.print("El voltaje actual es: ");
+  Serial.print(vOut);
+  Serial.println(" Voltios");
+  Serial.print("La temperatura es -> ");
+  
+  Serial.print(vOut *100);
+  Serial.println("° ");
+
+
+    lcd.setCursor(0,0);
+    lcd.print("DESEADA :"); 
+    lcd.print(vOut *100,2);
+    lcd.print("*");
+    lcd.setCursor (0,1);
+    lcd.print("MEDIDA :");
+    lcd.print(vOut2 *100,2);
+    lcd.print("*");
+   // lcd.print("  ^u^ ");
+
+    lcd.display();
+    //delay(dt);
+    //lcd.noDisplay();
+    //delay(dt);
+
+  delay(dt);
+}
